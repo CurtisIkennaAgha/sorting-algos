@@ -22,9 +22,29 @@ function bubbleSort(numbers: number[]){
   return numbers;
   }
 
+function mergeSort(numbers: number[]): number[] {
+  console.log("i havent implemented merge sort yet");
+  return numbers;
+}
 
 export default function Home() {
   const [input, setInput] = React.useState("");
+  const [algo, setAlgo] = React.useState("bubble");
+  const sortingAlgos: Record<string, (arr: number[]) => number[]> = {
+      bubble: bubbleSort,
+      merge: mergeSort,
+};
+
+function runAlgo(name: string, arr: number[]) {
+  const algoFunc = sortingAlgos[name];
+  if (algoFunc) {
+    return algoFunc(arr);
+  } else {
+    console.error("Algorithm not found:", name);
+    return arr;
+  }
+
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-pink-100">
@@ -39,16 +59,18 @@ export default function Home() {
         />
         <select
           className="w-full px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 text-gray-800 bg-white placeholder-gray-400 transition cursor-pointer"
-          defaultValue="bubble"
+          value={algo} onChange={(e) => setAlgo(e.target.value)}
         >
           <option value="bubble">Bubble Sort</option>
+          <option value="merge">Merge Sort</option>
         </select>
         <button
           className="w-full py-2 px-4 bg-gradient-to-r from-blue-400 to-pink-400 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-pink-500 transition mb-2"
           onClick={() => {
+            
             const arr = input.split(",").map(x => Number(x.trim()));
             console.log("Input array:", arr);
-            const sortedArr = bubbleSort(arr);
+            const sortedArr = runAlgo(algo, arr);
             console.log("Sorted array:", sortedArr);
           }}
         >
